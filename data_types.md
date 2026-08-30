@@ -63,11 +63,9 @@ PostgreSQL provides several numeric types for storing integers and decimal value
 ### Integer Example
 ```sql
 CREATE TABLE products (
-```
 id BIGINT,
 stock_quantity INTEGER,
 display_order SMALLINT
-```sql
 );
 ```
 
@@ -81,9 +79,7 @@ For financial and other exact calculations, use NUMERIC or DECIMAL.
 
 ```sql
 CREATE TABLE products (
-```
 id BIGINT,
-```sql
 price NUMERIC(10, 2)
 );
 ```
@@ -111,19 +107,20 @@ price NUMERIC(12, 2)
 ```
 
 rather than:
-
 price DOUBLE PRECISION
 
 ## 2. Character Data Types
 PostgreSQL provides three commonly used character types:
 
-CHAR(n)
-VARCHAR(n)
-### TEXT
+CHAR(n) \
+VARCHAR(n) \
+TEXT 
 ### CHAR
 CHAR(n) stores fixed-length strings.
 
+```sql
 country_code CHAR(2)
+```
 
 If the value is shorter than the defined length, PostgreSQL pads it with spaces.
 
@@ -132,14 +129,18 @@ It is useful for genuinely fixed-length values, but is less commonly required in
 ### VARCHAR
 VARCHAR(n) stores variable-length strings with a maximum length.
 
+```sql
 username VARCHAR(50)
+```
 
 The value cannot exceed the specified length.
 
 ### TEXT
 TEXT stores variable-length strings without an explicitly defined maximum length.
 
+```sql
 description TEXT
+```
 
 For most PostgreSQL applications, TEXT is an excellent default for general-purpose text.
 
@@ -148,26 +149,29 @@ Do not automatically use VARCHAR(n) simply because other database systems common
 
 If the application does not require a database-level maximum length, this is often sufficient:
 
+```sql
 name TEXT
+```
 
 If a strict database-level limit is part of the data model, use:
-
+```sql
 username VARCHAR(50)
+```
 
 ## 3. Boolean Data Type
 PostgreSQL provides the BOOLEAN type for true/false values.
 
+```sql
 is_active BOOLEAN
+```
 
 Example:
 
 ```sql
 CREATE TABLE users (
-```
 id BIGINT,
 username TEXT,
 is_active BOOLEAN
-```sql
 );
 ```
 
@@ -214,8 +218,9 @@ opening_time TIME
 
 ### TIMESTAMP
 TIMESTAMP stores date and time without time-zone information.
-
+```sql
 created_at TIMESTAMP
+```
 
 ### TIMESTAMPTZ
 TIMESTAMPTZ is commonly preferred for timestamps representing real-world points in time.
@@ -261,17 +266,16 @@ rather than storing local time as plain text.
 UUID stands for Universally Unique Identifier.
 
 PostgreSQL provides a native UUID type:
-
+```sql
 id UUID
+```
 
 Example:
 
 ```sql
 CREATE TABLE users (
-```
 id UUID PRIMARY KEY,
 name TEXT NOT NULL
-```sql
 );
 ```
 
@@ -291,10 +295,8 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 ```sql
 CREATE TABLE users (
-```
 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 name TEXT NOT NULL
-```sql
 );
 ```
 
@@ -325,8 +327,9 @@ PostgreSQL supports both:
 ### JSONB
 ### JSON
 JSON stores JSON text while preserving its original textual representation.
-
+```sql
 metadata JSON
+```
 
 ### JSONB
 JSONB stores JSON in a decomposed binary representation that is generally more useful for querying and indexing.
@@ -340,9 +343,7 @@ Example:
 ```sql
 CREATE TABLE users (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-```
 name TEXT NOT NULL,
-```sql
 metadata JSONB
 );
 ```
@@ -361,20 +362,16 @@ Query JSONB:
 
 ```sql
 SELECT *
-```
 FROM users
-```sql
 WHERE metadata->>'role' = 'admin';
 ```
 
 ### JSONB Indexing
-For frequently queried JSONB data, a GIN index can be useful:
+For frequently queried JSONB data, a GIN(Generalized Inverted Index) index can be useful:
 
 ```sql
 CREATE INDEX idx_users_metadata
-```
 ON users
-```sql
 USING GIN (metadata);
 ```
 
@@ -397,19 +394,17 @@ PostgreSQL supports arrays of many data types.
 
 Examples:
 
+```sql
 tags TEXT[]
-
 scores INTEGER[]
-
+```
 Example table:
 
 ```sql
 CREATE TABLE articles (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-```
 title TEXT NOT NULL,
 tags TEXT[]
-```sql
 );
 ```
 
@@ -427,9 +422,7 @@ Query an array:
 
 ```sql
 SELECT *
-```
 FROM articles
-```sql
 WHERE 'postgresql' = ANY(tags);
 ```
 
@@ -449,9 +442,7 @@ Example:
 ```sql
 CREATE TABLE documents (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-```
 file_name TEXT NOT NULL,
-```sql
 file_data BYTEA
 );
 ```
@@ -481,10 +472,8 @@ Use it in a table:
 ```sql
 CREATE TABLE users (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-```
 username TEXT NOT NULL,
 status user_status NOT NULL DEFAULT 'active'
-```sql
 );
 ```
 
@@ -516,13 +505,14 @@ PostgreSQL provides specialized types for network addresses.
 Common types include:
 
 ### INET
-CIDR
-MACADDR
-MACADDR8
+### CIDR
+### MACADDR
+### MACADDR8
 ### INET
 INET stores IPv4 or IPv6 addresses.
-
+```sql
 ip_address INET
+```
 
 Example:
 
@@ -541,8 +531,9 @@ TSQUERY
 These types support PostgreSQL's full-text search functionality.
 
 Example:
-
+```sql
 search_vector TSVECTOR
+```
 
 A search vector can be generated from text:
 
@@ -568,9 +559,7 @@ Example:
 
 ```sql
 CREATE INDEX idx_articles_search
-```
 ON articles
-```sql
 USING GIN (search_vector);
 ```
 
@@ -611,9 +600,7 @@ Example:
 ```sql
 CREATE TABLE documents (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-```
 content XML
-```sql
 );
 ```
 
@@ -666,21 +653,15 @@ A practical PostgreSQL schema might look like this:
 
 ```sql
 CREATE TABLE users (
-```
 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 username TEXT NOT NULL,
 email TEXT NOT NULL,
-```sql
 age INTEGER,
-```
 balance NUMERIC(12, 2) NOT NULL DEFAULT 0,
 is_active BOOLEAN NOT NULL DEFAULT TRUE,
-```sql
 birth_date DATE,
 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-```
 updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-```sql
 metadata JSONB
 );
 ```
@@ -709,39 +690,19 @@ The following example demonstrates several PostgreSQL data types together:
 
 ```sql
 CREATE TABLE employees (
-```
 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-
 employee_number BIGINT GENERATED ALWAYS AS IDENTITY,
-
 name TEXT NOT NULL,
-
-```sql
 age INTEGER,
-```
-
 salary NUMERIC(12, 2),
-
 is_active BOOLEAN NOT NULL DEFAULT TRUE,
-
 hire_date DATE NOT NULL,
-
 last_login_at TIMESTAMPTZ,
-
 skills TEXT[],
-
-```sql
 metadata JSONB,
-```
-
 ip_address INET,
-
-```sql
 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-```
-
 updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-```sql
 );
 ```
 
@@ -749,7 +710,6 @@ Insert an employee:
 
 ```sql
 INSERT INTO employees (
-```
 name,
 age,
 salary,
@@ -758,13 +718,10 @@ skills,
 metadata,
 ip_address
 )
-```sql
 VALUES (
 'Alice Johnson',
-```
 30,
 75000.00,
-```sql
 '2024-01-15',
 ARRAY['PostgreSQL', 'Docker', 'Linux'],
 '{"department": "Engineering", "level": "Senior"}',
@@ -773,7 +730,7 @@ ARRAY['PostgreSQL', 'Docker', 'Linux'],
 ```
 
 Query the employee:
-
+```sql
 SELECT
 id,
 name,
@@ -781,7 +738,6 @@ salary,
 skills,
 metadata,
 created_at
-```sql
 FROM employees;
 ```
 
@@ -789,9 +745,7 @@ Query JSONB data:
 
 ```sql
 SELECT *
-```
 FROM employees
-```sql
 WHERE metadata->>'department' = 'Engineering';
 ```
 
@@ -799,9 +753,7 @@ Query array data:
 
 ```sql
 SELECT *
-```
 FROM employees
-```sql
 WHERE 'PostgreSQL' = ANY(skills);
 ```
 
@@ -816,9 +768,9 @@ age INTEGER
 ```
 
 instead of:
-
+```sql
 age TEXT
-
+```
 This gives PostgreSQL better opportunities for validation, comparison, indexing, and query optimization.
 
 ### 18.2 Use NUMERIC for Exact Financial Values
@@ -847,9 +799,9 @@ metadata JSONB
 ```
 
 is generally more useful than:
-
+```sql
 metadata JSON
-
+```
 ### 18.5 Don't Overuse JSONB
 JSONB is powerful, but it should not replace relational modeling everywhere.
 
@@ -857,10 +809,10 @@ If you frequently query:
 
 ```sql
 customer_id
-```
 product_id
 status
 created_at
+```
 
 these values generally belong in proper columns rather than being hidden inside JSONB.
 
@@ -884,13 +836,9 @@ Example:
 ```sql
 CREATE TABLE accounts (
 id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-```
-
 email TEXT NOT NULL UNIQUE,
-
 balance NUMERIC(12, 2) NOT NULL
 CHECK (balance >= 0)
-```sql
 );
 ```
 
@@ -904,48 +852,52 @@ id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 ```
 
 instead of relying on the older:
-
+```sql
 id SERIAL PRIMARY KEY
+```
 
 Identity columns are part of the SQL-standard approach and provide clearer schema semantics.
 
 ## 19. Quick Reference
-| Category             | Common PostgreSQL Types              |
-| Integer              | SMALLINT, INTEGER, BIGINT            |
-| Decimal              | NUMERIC, DECIMAL                     |
-| Floating Point       | REAL, DOUBLE PRECISION               |
-| Text                 | CHAR, VARCHAR, TEXT                  |
-| Boolean              | BOOLEAN                              |
-| Date                 | DATE                                 |
-| Time                 | TIME                                 |
-| Timestamp            | TIMESTAMP, TIMESTAMPTZ               |
-| Duration             | INTERVAL                             |
-| Identifier           | UUID                                 |
-| JSON                 | JSON, JSONB                          |
-| Array                | TEXT[], INTEGER[], etc.              |
-| Binary               | BYTEA                                |
-| Enum                 | ENUM                                 |
-| Network              | INET, CIDR, MACADDR                  |
-| Full Text Search     | TSVECTOR, TSQUERY                    |
-| Geometry             | POINT, LINE, BOX, POLYGON, CIRCLE   |
-| XML                  | XML                                  |
-| Bit                  | BIT, BIT VARYING                     |
-| Currency             | MONEY                                |
+
+| Category | Common PostgreSQL Types |
+| :--- | :--- |
+| Integer | `SMALLINT`, `INTEGER`, `BIGINT` |
+| Decimal | `NUMERIC`, `DECIMAL` |
+| Floating Point | `REAL`, `DOUBLE PRECISION` |
+| Text | `CHAR`, `VARCHAR`, `TEXT` |
+| Boolean | `BOOLEAN` |
+| Date | `DATE` |
+| Time | `TIME` |
+| Timestamp | `TIMESTAMP`, `TIMESTAMPTZ` |
+| Duration | `INTERVAL` |
+| Identifier | `UUID` |
+| JSON | `JSON`, `JSONB` |
+| Array | `TEXT[]`, `INTEGER[]`, etc. |
+| Binary | `BYTEA` |
+| Enum | `ENUM` |
+| Network | `INET`, `CIDR`, `MACADDR` |
+| Full Text Search | `TSVECTOR`, `TSQUERY` |
+| Geometry | `POINT`, `LINE`, `BOX`, `POLYGON`, `CIRCLE` |
+| XML | `XML` |
+| Bit | `BIT`, `BIT VARYING` |
+| Currency | `MONEY` |
+
 
 ## Conclusion
 PostgreSQL's type system allows you to model application data accurately instead of treating every value as a string.
 
 For most production applications, a small set of types covers the majority of requirements:
 
-INTEGER / BIGINT
-NUMERIC
+### INTEGER / BIGINT
+### NUMERIC
 ### TEXT
-BOOLEAN
+### BOOLEAN
 ### DATE
 ### TIMESTAMPTZ
-UUID
+### UUID
 ### JSONB
-ARRAY
+### ARRAY
 ### INET
 
 The best data type depends on the meaning, range, precision, query patterns, and lifecycle of the data.
