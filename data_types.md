@@ -26,25 +26,6 @@ This tutorial covers the most commonly used PostgreSQL data types, their syntax,
 19. [Quick Reference](#19-quick-reference)
 
 ## 1. Numeric Data Types
-## 2. Character Data Types
-## 3. Boolean Data Type
-## 4. Date and Time Data Types
-## 5. UUID
-## 6. JSON and JSONB
-## 7. Array Data Types
-## 8. Binary Data
-## 9. Enumerated Types
-## 10. Network Address Types
-## 11. Full-Text Search Types
-## 12. Geometric Types
-## 13. XML
-## 14. Bit String Types
-## 15. Money Type
-## 16. Common Production Choices
-## 17. Complete Example
-## 18. Best Practices
-## 19. Quick Reference
-## 1. Numeric Data Types
 PostgreSQL provides several numeric types for storing integers and decimal values.
 
 ### Common Numeric Types
